@@ -20,6 +20,7 @@ namespace WindowsFormsApp2
 
         int Cx, Cy;
         int count = 0;
+        ShapeFactory sf = new ShapeFactory();
         Regex regex = new Regex(@"\d+");
 
         private void button1_click(object sender, EventArgs e)
@@ -31,14 +32,11 @@ namespace WindowsFormsApp2
 
             while (count < cmdLine.Length)
             {
-                if (cmdLine[count].StartsWith("move"))
+                if (cmdLine[count].StartsWith("rect"))
                 {
-                    Match match = regex.Match(cmdLine[count]);
-                    if (match.Success)
-                    {
-                        Console.WriteLine(match.Value);
-                        //update pen coordinates
-                    }
+                    Shape s = sf.GetShape("rectangle");
+                    s.set(Color.Black, 50, 50, 100, 100);
+                    s.draw(panel1.CreateGraphics());
                 }
                 else if (cmdLine[count].StartsWith("up")) //PEN UP
                 {
@@ -94,15 +92,22 @@ namespace WindowsFormsApp2
                 }
                 else if (cmdLine[count].StartsWith("movePen"))
                 {
-                    Regex pattern = new Regex(@"\d+\s\d+");
-                    Match testpat = pattern.Match(cmdLine[count]);
-                    if (testpat.Success)
+                    Regex pattern = new Regex(@"(?<xcoord>\d+)\s(?<ycoord>\d+)");
+                    Match match = pattern.Match(cmdLine[count]);
+                    //MatchCollection matches = pattern.Matches(cmdLine[count])
+                    if (match.Success)
                     {
-                        Console.WriteLine(testpat.Value);
+                        int xcoord = int.Parse(match.Groups["xcoord"].Value);
+                        int ycoord = int.Parse(match.Groups["ycoord"].Value);
+                        Console.WriteLine("xcoord " + xcoord);
+                        Cx = xcoord;
+                        Console.WriteLine("ycoord " + ycoord);
+                        Cy = ycoord;
                     }
                     else
                         Console.WriteLine("false");
                 }
+                
                 count++;
             } 
         }
