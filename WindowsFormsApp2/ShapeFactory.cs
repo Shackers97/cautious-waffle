@@ -14,6 +14,14 @@ namespace WindowsFormsApp2
             {
                 return new Rectangle();
             }
+            else if (shape.Equals("circle"))
+            {
+                return new Circle();
+            }
+            else if (shape.Equals("triangle"))
+            {
+                return new Triangle();
+            }
             else
             {
                 System.ArgumentException argex = new System.ArgumentException("Test Exception");

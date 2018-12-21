@@ -23,6 +23,7 @@ namespace WindowsFormsApp2
             this.x = x;
             this.y = y;
         }
+
         public abstract void draw(Graphics g);
         public abstract double calcArea();
 

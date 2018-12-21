@@ -29,18 +29,46 @@ namespace WindowsFormsApp2
             string test = textBox1.Text;
             string[] cmdLine = test.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             Console.WriteLine("array length: " + cmdLine.Length);
-
-            while (count < cmdLine.Length)
+            List<string> command = cmdLine.ToList();
+            while (count < command.Count)
             {
-                if (cmdLine[count].StartsWith("rect"))
+                if (command[count].StartsWith("rectangle"))
                 {
-                    Shape s = sf.GetShape("rectangle");
-                    s.set(Color.Black, 50, 50, 100, 100);
-                    s.draw(panel1.CreateGraphics());
+                    Regex pattern = new Regex(@"(?<width>\d+)\s(?<height>\d+)");
+                    Match match = pattern.Match(command[count]);
+                    if (match.Success)
+                    {
+                        int width = int.Parse(match.Groups["width"].Value);
+                        int height = int.Parse(match.Groups["height"].Value);
+                        Shape s = sf.GetShape("rectangle");
+                        s.set(Color.Black, Cx, Cy, width, height); //rectangle of height/width 100
+                        s.draw(panel1.CreateGraphics());
+                    }         
                 }
-                else if (cmdLine[count].StartsWith("up")) //PEN UP
+                else if (command[count].StartsWith("circle"))
                 {
-                    Match match = regex.Match(cmdLine[count]);
+                    Match match = regex.Match(command[count]);
+                    if (match.Success)
+                    {
+                        int rad = int.Parse(match.Value);
+                        Shape s = sf.GetShape("circle");
+                        s.set(Color.Black, Cx, Cy, rad);
+                        s.draw(panel1.CreateGraphics());
+                    }                    
+                }
+                else if (command[count].StartsWith("triangle"))
+                {
+                    //Point[] points;
+                    //points[0] = new Point(10, 10);
+                    //points[0] = new Point(100, 10);
+                    //points[0] = new Point(50, 100);
+
+                    //Shape s = sf.GetShape("triangle");
+                    //s.set(Color.Black, Cx, Cy, points);
+                }
+                else if (command[count].StartsWith("up")) //PEN UP
+                {
+                    Match match = regex.Match(command[count]);
                     if (match.Success)
                     {
                         int newY = Int32.Parse(match.Value) + Cy;
@@ -53,9 +81,9 @@ namespace WindowsFormsApp2
                     else
                         Console.WriteLine("Wrong Input");
                 }
-                else if (cmdLine[count].StartsWith("down")) //PEN DOWN
+                else if (command[count].StartsWith("down")) //PEN DOWN cmdLine[count].StartsWith("down")
                 {
-                    Match match = regex.Match(cmdLine[count]);
+                    Match match = regex.Match(command[count]);
                     if (match.Success)
                     {
                         int newY = Int32.Parse(match.Value) + Cy;
@@ -68,9 +96,9 @@ namespace WindowsFormsApp2
                     else
                         Console.WriteLine("Wrong Input");
                 }
-                else if (cmdLine[count].StartsWith("right")) //PEN RIGHT
+                else if (command[count].StartsWith("right")) //PEN RIGHT
                 {
-                    Match match = regex.Match(cmdLine[count]);
+                    Match match = regex.Match(command[count]);
                     if (match.Success)
                     {
                         int newX = Int32.Parse(match.Value) + Cx;
@@ -79,9 +107,9 @@ namespace WindowsFormsApp2
                         Console.WriteLine(match.Value + " Pen x: " + Cx + " Pen y: " + Cy);
                     }
                 }
-                else if (cmdLine[count].StartsWith("left")) //PEN LEFT
+                else if (command[count].StartsWith("left")) //PEN LEFT
                 {
-                    Match match = regex.Match(cmdLine[count]);
+                    Match match = regex.Match(command[count]);
                     if (match.Success)
                     {
                         int newX = Int32.Parse(match.Value) + Cx;
@@ -90,10 +118,10 @@ namespace WindowsFormsApp2
                         Console.WriteLine(match.Value + " Pen x: " + Cx + " Pen y: " + Cy);
                     }
                 }
-                else if (cmdLine[count].StartsWith("movePen"))
+                else if (command[count].StartsWith("movePen"))
                 {
                     Regex pattern = new Regex(@"(?<xcoord>\d+)\s(?<ycoord>\d+)");
-                    Match match = pattern.Match(cmdLine[count]);
+                    Match match = pattern.Match(command[count]);
                     //MatchCollection matches = pattern.Matches(cmdLine[count])
                     if (match.Success)
                     {
@@ -107,7 +135,22 @@ namespace WindowsFormsApp2
                     else
                         Console.WriteLine("false");
                 }
-                
+                else if (command[count].StartsWith("loop"))
+                {
+                    int loopcounter = count;
+                    while (!command[loopcounter].StartsWith("endloop")) 
+                    {
+                        Console.WriteLine(command[loopcounter]);
+                        loopcounter++;
+                    }
+                    Console.WriteLine("Start loop at line " + (count+1));
+                    Console.WriteLine("end loop at line " + (loopcounter+1));
+                    int NoOfLines = loopcounter - count - 1;
+                    //string[] looplist = new string[NoOfLines];
+                    //Array.Copy(cmdLine, (count+1), looplist, 0, NoOfLines); //refactor to list
+                    List<string> looper = command.GetRange(count + 1, NoOfLines);
+                    command.AddRange(looper);
+                }
                 count++;
             } 
         }
