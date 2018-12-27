@@ -24,7 +24,7 @@ namespace WindowsFormsApp2
             }
             else
             {
-                System.ArgumentException argex = new System.ArgumentException("Test Exception");
+                System.ArgumentException argex = new System.ArgumentException("Shape does not exist");
                 throw argex;
             }
         }

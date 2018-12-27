@@ -9,16 +9,20 @@ namespace WindowsFormsApp2
 {
     class Triangle : Shape
     {
-        Point[] points;
+        int a, b;
+        double hyp;
+
         public Triangle() : base()
         {
-            points[0] = new Point(10, 10);
-            points[1] = new Point(100, 10);
-            points[2] = new Point(50, 100);
+            a = 50;
+            b = 50;
+            hyp = Math.Sqrt(a ^ 2 + b ^ 2);
         }
-        public Triangle(Color c, int x, int y, params Point[] points) : base(c, x, y)
+        public Triangle(Color c, int x, int y, int a, int b) : base(c, x, y)
         {
-            this.points = points;
+            this.a = a;
+            this.b = b;
+            hyp = Math.Sqrt(this.a ^ 2 + this.b ^ 2);
         }
         public override double calcArea()
         {
@@ -29,14 +33,22 @@ namespace WindowsFormsApp2
         {
             Pen p = new Pen(Color.Black);
             SolidBrush sb = new SolidBrush(c);
-            //g.FillPolygon(sb, points);
-            g.DrawPolygon(p, points);
+            Point[] dims = this.GetPoints();
+            //g.FillPolygon(sb, dims);
+            g.DrawPolygon(p, dims);
         }
 
         public override void set(Color c, params int[] list)
         {
             base.set(c, list[0], list[1]);
-            //this.points = list[2];
+            this.a = list[2];
+            this.b = list[3];
+        }
+
+        public Point[] GetPoints()
+        {
+            Point[] points = new Point[] { new Point(base.x, base.y), new Point(base.x, base.y+a), new Point(base.x+b, base.y+a) };
+            return points;
         }
     }
 }

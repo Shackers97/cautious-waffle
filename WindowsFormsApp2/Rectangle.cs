@@ -29,7 +29,7 @@ namespace WindowsFormsApp2
         {
             Pen p = new Pen(Color.Black);
             SolidBrush sb = new SolidBrush(c);
-            g.FillRectangle(sb, x, y, width, height);
+            //g.FillRectangle(sb, x, y, width, height);
             g.DrawRectangle(p, x, y, width, height);
         }
 

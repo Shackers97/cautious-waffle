@@ -29,7 +29,7 @@ namespace WindowsFormsApp2
         {
             Pen p = new Pen(Color.Black);
             SolidBrush sb = new SolidBrush(c);
-            g.FillEllipse(sb, x, y, rad * 2, rad * 2);
+            //g.FillEllipse(sb, x, y, rad * 2, rad * 2);
             g.DrawEllipse(p, x, y, rad * 2, rad * 2);
         }
 
