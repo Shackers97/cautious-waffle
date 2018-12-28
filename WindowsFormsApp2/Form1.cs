@@ -175,9 +175,13 @@ namespace WindowsFormsApp2
                         Cy = ycoord;
                     }
                 }
-                else if (command[count].Equals("loop"))
+                else if (command[count].StartsWith("loop"))
                 {
+                    Regex loopreg = new Regex(@"(?<command>\w+)\s(?<loopnum>\d+)"); //new
+                    Match match = loopreg.Match(command[count]); //new
+                    int loopnum = int.Parse(match.Groups["loopnum"].Value); //new
                     int loopcounter = count;
+                    int c = 0;
                     while (!command[loopcounter].StartsWith("endloop"))
                     {
                         Console.WriteLine(command[loopcounter]);
@@ -187,21 +191,28 @@ namespace WindowsFormsApp2
                     Console.WriteLine("end loop at line " + (loopcounter + 1));
                     int NoOfLines = loopcounter - count - 1;
                     List<string> looper = command.GetRange(count + 1, NoOfLines);
-                    command.AddRange(looper);               //must insert at index not at end
+                    List<string> looper2 = new List<string>(); //new
+                    while (c != (loopnum-1))
+                    {
+                        looper2.AddRange(looper);
+                        c++;
+                    }
+                    command.InsertRange((count+1), looper2); //originally looper
                 }
                 else if (command[count].StartsWith("repeat"))
                 {
-                    Regex pattern = new Regex(@"(?<command>\w+)\s(?<num>\d+)\s(?<shape>\w+)\s(?<mod>\+|\-)(?<val>\d+)");
-                    Match match = pattern.Match(command[count]);
-                    string com = match.Groups["command"].Value;
-                    if (match.Success && com.Equals("repeat"))
+                    Regex varPattern = new Regex(@"(?<command>\w+)\s(?<num>\d+)\s(?<shape>\w+)\s(?<var>\w+)\s(?<mod>\+|\-)(?<val>\d+)"); // Variable pattern
+                    Match varMatch = varPattern.Match(command[count]); //Match to variable pattern
+                    string com = varMatch.Groups["command"].Value;
+                    string var = varMatch.Groups["var"].Value;
+                    if (varMatch.Success && com.Equals("repeat") && VarExists(var))
                     {
                         int repcounter = 0;
-                        int numreps = int.Parse(match.Groups["num"].Value);
-                        string shape = match.Groups["shape"].Value;
-                        string modifier = match.Groups["mod"].Value;            //take into account negative increment
-                        int increment = int.Parse(match.Groups["val"].Value);
-                        int value = 50; //base shape size
+                        int numreps = int.Parse(varMatch.Groups["num"].Value);
+                        string shape = varMatch.Groups["shape"].Value;
+                        string modifier = varMatch.Groups["mod"].Value;            
+                        int increment = int.Parse(varMatch.Groups["val"].Value);
+                        int value = checkVarValue(var); ; //base shape size
                         int count2 = count;
                         while (repcounter < numreps)
                         {
@@ -227,6 +238,11 @@ namespace WindowsFormsApp2
                             count2++;
                         }
                     }
+                    else
+                    {
+                        label1.Text = "Incorrect syntax for repeat at line " + (count + 1) + ": Stopping execution";
+                        return;
+                    }
                 }
                 else if (command[count].StartsWith("var")) //variable creator
                 {
@@ -241,25 +257,47 @@ namespace WindowsFormsApp2
                         Variable var = new Variable(name, value);
                         localVars.Add(var);
                     }        
+
+                    //check if var already exists with name
                 }
                 else if (command[count].StartsWith("if"))
                 {
-
+                    Regex ifReg = new Regex(@"(?<if>\w+)\s(?<variable>\w+)\s(?<mod>\=|\<|\>)\s(?<argval>\d+)"); //if variable =/</> 000
+                }
+                else if (command[count].StartsWith("endloop")|| command[count].StartsWith("endif"))
+                {
+                    //do nothing
                 }
                 else
                 {
-                    int vcounter = 0;
-                    foreach (Variable var in localVars)
+                    Regex varReg = new Regex(@"(?<name>\w+)\s(?<mod>\+|\-|\=)\s(?<value>\d+)");
+                    Match match = varReg.Match(command[count]);
+                    string varName = match.Groups["name"].Value;
+                    int currentVal = checkVarValue(varName);
+                    int val = int.Parse(match.Groups["value"].Value);
+
+                    if (match.Success && match.Groups["mod"].Value.Equals("+") && VarExists(varName))
                     {
-                        if(command[count].StartsWith(localVars[vcounter].GetName()))
-                        {
-                            Console.WriteLine("MATCH");
-                        }
-                        else
-                        {
-                            Console.WriteLine("NO MATCH");
-                        }
-                        vcounter++;
+                        currentVal = currentVal + val;
+                        localVars[getVarIndex(varName)].SetValue(currentVal);
+                        label1.Text = localVars[getVarIndex(varName)].ToString();
+                    }
+                    else if (match.Success && match.Groups["mod"].Value.Equals("-") && VarExists(varName))
+                    {
+                        currentVal = currentVal - val; //check for negatives
+                        localVars[getVarIndex(varName)].SetValue(currentVal);
+                        label1.Text = localVars[getVarIndex(varName)].ToString();
+                    }
+                    else if (match.Success && match.Groups["mod"].Value.Equals("=") && VarExists(varName))
+                    {
+                        currentVal = val;
+                        localVars[getVarIndex(varName)].SetValue(currentVal);
+                        label1.Text = localVars[getVarIndex(varName)].ToString();
+                    } 
+                    else
+                    {
+                        label1.Text = "error at line " + (count+1) + ": Variable '" + varName + "' does not exist";
+                        return;
                     }
                 }
                 count++;
@@ -278,6 +316,49 @@ namespace WindowsFormsApp2
             count = 0;
             Cx = Cy = 0;
         }
+
+        //VARIABLE METHODS
+
+        private int checkVarValue(string name) //checks and retrieves the value of a variable with string name
+        {
+            int vcounter = 0;
+            int varValue = 0;
+            foreach (Variable var in localVars)
+            {
+                if (name.Equals(localVars[vcounter].GetName()))
+                {
+                    varValue = localVars[vcounter].GetValue();
+                    break;
+                }
+                vcounter++;
+            }
+            return varValue;
+        }
+        private int getVarIndex(string name) //checks and retrieves the position of a variable with string name within the variables list
+        {
+            int vcounter = 0;
+            foreach (Variable var in localVars)
+            {
+                if (name.Equals(localVars[vcounter].GetName()))
+                    return vcounter;
+                vcounter++;
+            }
+            return vcounter;
+        }
+        private bool VarExists(string name) //checks if variable of string name exists within variables list
+        {
+            int vcounter = 0;
+            foreach (Variable var in localVars)
+            {
+                if (name.Equals(localVars[vcounter].GetName()))
+                    return true;
+                else if (!name.Equals(localVars[vcounter].GetName()))
+                    break;
+                vcounter++;  
+            }
+            return false;
+        }
+
     }
 }
 

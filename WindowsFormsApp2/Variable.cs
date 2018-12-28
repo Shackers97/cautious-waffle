@@ -25,7 +25,7 @@ namespace WindowsFormsApp2
 
         public override string ToString()
         {
-            return base.ToString();
+            return "variable " + name + " equals: " + value;
         }
 
         public string GetName()
