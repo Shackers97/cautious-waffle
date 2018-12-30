@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicsPLApp", "WindowsFormsApp2\GraphicsPLApp.csproj", "{B62CC79C-F582-45EE-BCEA-1F7A59AC100C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicsCommandsUnitTests", "GraphicsCommandsUnitTests\GraphicsCommandsUnitTests.csproj", "{4344DA5F-63CA-4730-8210-6C2108F5E19A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B62CC79C-F582-45EE-BCEA-1F7A59AC100C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B62CC79C-F582-45EE-BCEA-1F7A59AC100C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B62CC79C-F582-45EE-BCEA-1F7A59AC100C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4344DA5F-63CA-4730-8210-6C2108F5E19A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4344DA5F-63CA-4730-8210-6C2108F5E19A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4344DA5F-63CA-4730-8210-6C2108F5E19A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4344DA5F-63CA-4730-8210-6C2108F5E19A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
