@@ -27,7 +27,7 @@ namespace GraphicsCommandParser
 
         public override void draw(Graphics g)
         {
-            Pen p = new Pen(Color.Black);
+            Pen p = new Pen(base.c);
             SolidBrush sb = new SolidBrush(c);
             //g.FillRectangle(sb, x, y, width, height);
             g.DrawRectangle(p, x, y, width, height);

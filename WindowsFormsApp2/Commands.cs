@@ -9,15 +9,22 @@ using System.Windows.Forms;
 
 namespace GraphicsCommandParser
 {
-    class Commands
+    public class Commands
     {
         ShapeFactory sf = new ShapeFactory();
         VariableHandler vh = new VariableHandler();
         public int x, y; //Pen Co-ordinates
-
-        public void RectangleCommand(string command, Graphics g, Label label1, int counter)
+        
+        /// <summary>
+        /// Draws a rectangle according to the input string
+        /// </summary>
+        /// <param name="command">The command string</param>
+        /// <param name="label1">Output label for console</param>
+        /// <param name="counter">The current line counter</param>
+        /// <returns>The current line in which the command is run</returns>
+        public int RectangleCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
-            Regex pattern = new Regex(@"(?<command>\w+)\s(?<width>\d+)\s(?<height>\d+)");
+            Regex pattern = new Regex(@"(?<command>\w+)\s(?<width>\d{1,3})\s(?<height>\d{1,3})");
             Match match = pattern.Match(command);
             string com = match.Groups["command"].Value;
             if (match.Success && com.Equals("rectangle"))
@@ -25,25 +32,26 @@ namespace GraphicsCommandParser
                 int width = int.Parse(match.Groups["width"].Value);
                 int height = int.Parse(match.Groups["height"].Value);
                 Shape s = sf.GetShape("rectangle");
-                s.set(Color.Black, x, y, width, height);
+                s.set(p.Color, x, y, width, height);
                 s.draw(g);
             }
             else
             {
                 label1.Text = "Incorrect syntax for Rectangle at line " + (counter + 1) + ": Stopping execution";
-                return;
-            }   
+                return -2;
+            }
+            return counter;
         }
-        public void CircleCommand(string command, Graphics g, Label label1, int counter)
+        public void CircleCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
-            Regex reg = new Regex(@"(?<command>\w+)\s(?<radius>\d+)");
+            Regex reg = new Regex(@"(?<command>\w+)\s(?<radius>\d{1,3})");
             Match match = reg.Match(command);
             string com = match.Groups["command"].Value;
             if (match.Success && com.Equals("circle"))
             {
                 int rad = int.Parse(match.Groups["radius"].Value);
                 Shape s = sf.GetShape("circle");
-                s.set(Color.Black, x, y, rad);
+                s.set(p.Color, x, y, rad);
                 s.draw(g);
             }
             else
@@ -52,9 +60,9 @@ namespace GraphicsCommandParser
                 return;
             }
         }
-        public void TriangleCommand(string command, Graphics g, Label label1, int counter)
+        public void TriangleCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
-            Regex pat = new Regex(@"(?<command>\w+)\s(?<a>\d+)\s(?<b>\d+)");
+            Regex pat = new Regex(@"(?<command>\w+)\s(?<a>\d{1,3})\s(?<b>\d{1,3})");
             Match match = pat.Match(command);
             string com = match.Groups["command"].Value;
             if (match.Success && com.Equals("triangle"))
@@ -62,7 +70,7 @@ namespace GraphicsCommandParser
                 int a = int.Parse(match.Groups["a"].Value);
                 int b = int.Parse(match.Groups["b"].Value);
                 Shape s = sf.GetShape("triangle");
-                s.set(Color.Black, x, y, a, b);
+                s.set(p.Color, x, y, a, b);
                 s.draw(g);
             }
             else
@@ -71,9 +79,68 @@ namespace GraphicsCommandParser
                 return;
             }
         }
-        public void UpCommand(string command, Pen p, Graphics g, Label label1, int counter)
+        public void PolygonCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
-            Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d+)");
+            Regex pat = new Regex(@"(?<command>\w+)\s(?<1>\d{1,3}\,\d{1,3})\s(?<2>\d{1,3}\,\d{1,3})\s(?<3>\d{1,3}\,\d{1,3})\s?(?<4>\d{1,3}\,\d{1,3})?\s?(?<5>\d{1,3}\,\d{1,3})?\s?(?<6>\d{1,3}\,\d{1,3})?");
+            Match match = pat.Match(command);
+            string com = match.Groups["command"].Value;
+            if (match.Success && com.Equals("polygon"))
+            {
+                string a = match.Groups["1"].Value;
+                string b = match.Groups["2"].Value;
+                string c = match.Groups["3"].Value;
+                string d = match.Groups["4"].Value;
+                string e = match.Groups["5"].Value;
+                string f = match.Groups["6"].Value;
+
+                Point p1 = ToPoint(a);
+                Point p2 = ToPoint(b);
+                Point p3 = ToPoint(c);
+
+                List<Point> pl = new List<Point>();
+                pl.Add(p1);
+                pl.Add(p2);
+                pl.Add(p3);
+
+                if (!d.Equals(""))
+                {
+                    Point p4 = ToPoint(d);
+                    pl.Add(p4);
+                }
+                if (!e.Equals(""))
+                {
+                    Point p5 = ToPoint(e);
+                    pl.Add(p5);
+                }
+                if (!f.Equals(""))
+                {
+                    Point p6 = ToPoint(d);
+                    pl.Add(p6);
+                }
+
+                Point[] points = new Point[pl.Count];
+                points = pl.ToArray();
+                g.DrawPolygon(p, points);
+            }
+            else
+            {
+                label1.Text = "Incorrect syntax for Polygon: Stopping execution";
+                return;
+            }
+        }
+
+        private Point ToPoint(string coords)
+        {
+            string[] t = coords.Split(',');
+            int x = int.Parse(t[0]);
+            int y = int.Parse(t[1]);
+            Point point = new Point(x, y);
+            return point;
+        }
+
+        public int UpCommand(string command, Pen p, Graphics g, Label label1, int counter)
+        {
+            Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d{1,3})");
             Match match = reg.Match(command);
             string com = match.Groups["command"].Value;
             if (match.Success && com.Equals("up"))
@@ -84,13 +151,14 @@ namespace GraphicsCommandParser
             }
             else
             {
-                label1.Text = "Incorrect syntax for Up at line " + (counter + 1) + ": Stopping execution";
-                return;
+                label1.Text = "Incorrect syntax for Up: Stopping execution";
+                return -2;
             }
+            return counter;
         }
         public int DownCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
-            Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d+)");
+            Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d{1,3})");
             Match match = reg.Match(command);
             string com = match.Groups["command"].Value;
             if (match.Success && com.Equals("down"))
@@ -106,9 +174,9 @@ namespace GraphicsCommandParser
             }
             return counter;
         }
-        public void LeftCommand(string command, Pen p, Graphics g, Label label1, int counter) 
+        public int LeftCommand(string command, Pen p, Graphics g, Label label1, int counter) 
         {
-            Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d+)");
+            Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d{1,3})");
             Match match = reg.Match(command);
             string com = match.Groups["command"].Value;
             if (match.Success && com.Equals("left"))
@@ -120,12 +188,13 @@ namespace GraphicsCommandParser
             else
             {
                 label1.Text = "Incorrect syntax for Left at line " + (counter + 1) + ": Stopping execution";
-                return;
+                return -2;
             }
+            return counter;
         }
-        public void RightCommand(string command, Pen p, Graphics g, Label label1, int counter)
+        public int RightCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
-            Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d+)");
+            Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d{1,3})");
             Match match = reg.Match(command);
             string com = match.Groups["command"].Value;
             if (match.Success && com.Equals("right"))
@@ -137,12 +206,13 @@ namespace GraphicsCommandParser
             else
             {
                 label1.Text = "Incorrect syntax for Right at line " + (counter + 1) + ": Stopping execution";
-                return;
+                return -2;
             }
+            return counter;
         }
         public void MovePenCommand(string command, Label label1, int counter)
         {
-            Regex pattern = new Regex(@"(?<command>\w+)\s(?<xcoord>\d+)\s(?<ycoord>\d+)");
+            Regex pattern = new Regex(@"(?<command>\w+)\s(?<xcoord>\d{1,3})\s(?<ycoord>\d{1,3})");
             Match match = pattern.Match(command);
             string com = match.Groups["command"].Value;
             if (match.Success && com.Equals("movepen"))
@@ -158,6 +228,7 @@ namespace GraphicsCommandParser
                 return;
             }
         }
+
         public void DrawToCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
             Regex pattern = new Regex(@"(?<command>\w+)\s(?<xcoord>\d+)\s(?<ycoord>\d+)");
@@ -225,53 +296,72 @@ namespace GraphicsCommandParser
             }
             else
             {
-                label1.Text = "Incorrect syntax for Loop at line " + (counter + 1) + ": Stopping execution";
+                label1.Text = "Incorrect syntax for Loop: Stopping execution";
                 return;
             }
         }
         public int RepeatCommand(string newcommand, List<string> command, Label label1, int counter)
         {
-            Regex varPattern = new Regex(@"(?<command>\w+)\s(?<num>\d+)\s(?<shape>\w+)\s(?<var>\w+)\s(?<mod>\+|\-)(?<val>\d+)"); 
+            Regex varPattern = new Regex(@"(?<command>\w+)\s(?<num>\d+)\s(?<shape>\w+)\s(?<var>\w+)\s(?<mod>\+|\-)(?<val>\d+)"); //regex With variable
+            Regex intPattern = new Regex(@"(?<command>\w+)\s(?<num>\d+)\s(?<shape>\w+)\s(?<basesize>\d+)\s(?<mod>\+|\-)(?<val>\d+)"); //regex without variable
             Match varMatch = varPattern.Match(newcommand);
+            Match intMatch = intPattern.Match(newcommand);
             string com = varMatch.Groups["command"].Value;
             string var = varMatch.Groups["var"].Value;
-            if (varMatch.Success && com.Equals("repeat") && vh.VarExists(var))
+            int repcounter, numreps, increment, value, count2;
+            string shape, modifier;
+
+            if (varMatch.Success && com.Equals("repeat") && vh.VarExists(var)) //If input contains variable
             {
-                int repcounter = 0;
-                int numreps = int.Parse(varMatch.Groups["num"].Value);
-                string shape = varMatch.Groups["shape"].Value;
-                string modifier = varMatch.Groups["mod"].Value;
-                int increment = int.Parse(varMatch.Groups["val"].Value);
-                int value = vh.checkVarValue(var); ; //base shape size
-                int count2 = counter;
-                while (repcounter < numreps)
-                {
-                    if (modifier.Equals("-"))
-                        value = value - increment;
-                    else
-                        value = value + increment;
-                    string newCommand = null;
-                    switch (shape)
-                    {
-                        case "rectangle":
-                            newCommand = shape + " " + value + " " + value;
-                            break;
-                        case "triangle":
-                            newCommand = shape + " " + value + " " + value;
-                            break;
-                        case "circle":
-                            newCommand = shape + " " + value;
-                            break;
-                    }
-                    command.Insert(count2 + 1, newCommand);
-                    repcounter++;
-                    count2++;
-                }
+                value = vh.checkVarValue(var); ;
+
+                repcounter = 0;
+                numreps = int.Parse(varMatch.Groups["num"].Value);
+                shape = varMatch.Groups["shape"].Value;
+                modifier = varMatch.Groups["mod"].Value;
+                increment = int.Parse(varMatch.Groups["val"].Value);
+                
+                count2 = counter;
+                
+            }
+            else if (intMatch.Success && com.Equals("repeat")) //if input contains value
+            {
+                value = int.Parse(intMatch.Groups["basesize"].Value);
+
+                repcounter = 0;
+                numreps = int.Parse(intMatch.Groups["num"].Value);
+                shape = intMatch.Groups["shape"].Value;
+                modifier = intMatch.Groups["mod"].Value;
+                increment = int.Parse(intMatch.Groups["val"].Value);
+                count2 = counter;
             }
             else
             {
-                label1.Text = "Incorrect syntax for repeat at line " + (counter + 1) + ": Stopping execution";
+                label1.Text = "Incorrect syntax for repeat : Stopping execution";
                 return -2;
+            }
+            while (repcounter < numreps)
+            {
+                if (modifier.Equals("-"))
+                    value = value - increment;
+                else
+                    value = value + increment;
+                string newCommand = null;
+                switch (shape)
+                {
+                    case "rectangle":
+                        newCommand = shape + " " + value + " " + value;
+                        break;
+                    case "triangle":
+                        newCommand = shape + " " + value + " " + value;
+                        break;
+                    case "circle":
+                        newCommand = shape + " " + value;
+                        break;
+                }
+                command.Insert(count2 + 1, newCommand);
+                repcounter++;
+                count2++;
             }
             return counter;
         }

@@ -11,6 +11,7 @@ namespace GraphicsCommandParser
     {
         protected Color c;
         protected int x, y;
+        
 
         public Shape()
         {
@@ -33,6 +34,7 @@ namespace GraphicsCommandParser
             this.x = list[0];
             this.y = list[1];
         }
+
         
     }
 }

@@ -22,6 +22,7 @@ namespace GraphicsCommandParser
             {
                 return new Triangle();
             }
+            
             else
             {
                 System.ArgumentException argex = new System.ArgumentException("Shape does not exist");

@@ -27,7 +27,7 @@ namespace GraphicsCommandParser
 
         public override void draw(Graphics g)
         {
-            Pen p = new Pen(Color.Black);
+            Pen p = new Pen(base.c);
             SolidBrush sb = new SolidBrush(c);
             //g.FillEllipse(sb, x, y, rad * 2, rad * 2);
             g.DrawEllipse(p, x, y, rad * 2, rad * 2);

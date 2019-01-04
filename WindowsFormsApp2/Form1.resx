@@ -126,6 +126,35 @@
   <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>314, 17</value>
   </metadata>
+  <metadata name="colorDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>454, 17</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="pictureBox1.InitialImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAArwAAAAUCAYAAABvau7pAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        EwAACxMBAJqcGAAAAAd0SU1FB+IMHhAkGBzMBwQAAAL0SURBVHhe7dwxS3JhFMDxlkzSUbKmxqSGxE0w
+        6QPUEhVNfZegqSVa/AZC0BY4uOjSkGPU0FTRWhA0iQrnfZ/bue97kcuTBFdPl/8PTt6es/VHutWlOQEA
+        AABSjBteAAAApBo3vAAAAEg1bngBAACQanN/uQ8MwzAMwzAMk9aJPWQYhmEYhmGYtEzsIcMwDMMwDMOk
+        Zb4uMHuRKHqCWaKHLfSwhR620MMWetgRaUEQKyJR9ASzRA9b6GELPWyhhy30sCPSgiBWRKLoCWaJHrbQ
+        wxZ62EIPW+hhR6QFQayIRNETzBI9bKGHLfSwhR620MMWbUEQK8IW9LCBHrbQwxZ62EIPW+hhi7YgiBVh
+        i7ge/X5fbm5uJJfL6cl/Ly8vsrW1Jfl8Xur1ury+vurGv4Ofr8fFxYVUKhXJZrOyubkp7XZbN/RIiq/H
+        2dmZlMtlWVhYkPX1dbm+vtYNPZLi64Hpo4ct9LBFWxDEirBFXA/f7vDwUE5PT+Xz81NOTk7k6OhIN/4d
+        /Hxf8729PXl4eAh+ELm6upKlpSXd0CMpvh7Hx8dyd3cX9Gi1WlIoFHRDj6T4emD66GELPWzRFgSxImzh
+        6xG3W15elre3t+Dava6srATXjm8Hv0l6OM/Pz1IqlfQzeiRlkh6DwUAuLy9ld3dXT+iRlEl6YHroYQs9
+        bNEWBLEibOHrEbebn5+X0WgUXA+HQ8lkMsG149vBb5Ie7+/vsr29LZ1OR0/okZRJeride8TE/RASokcy
+        JumB6aGHLfSwRVsQw5LvesTti8WifHx8BNfjv6Xy7fA9X4/7+/vguc9er6cnX+iRnO/eH+7mtdvtytra
+        mp7QI0l8/7CFHrbQwxZq/DJxb6D9/f1/zyG614ODA934d/i5RqMRPO/pbpLG0WP6dnZ25PHxMXiGt9ls
+        yurqqm7oAQDghvfXcDe64xN6enqSWq0W/AcH9xr9c65vh5+jhy3n5+eysbEhi4uLUq1W5fb2Vjf0AABw
+        wwsAAIBUE/kD4Bt6idCKSjgAAAAASUVORK5CYII=
+</value>
+  </data>
+  <metadata name="saveFileDialog2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>575, 17</value>
+  </metadata>
+  <metadata name="$this.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>55</value>
   </metadata>

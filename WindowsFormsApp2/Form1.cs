@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -40,6 +41,8 @@ namespace GraphicsCommandParser
             texPen = new Pen(tBrush, 20);
             g = panel1.CreateGraphics();
             p = new Pen(Color.Red);
+            p.Width = comboBox1.SelectedIndex;
+            button3.BackColor = Color.Red;
         }
 
         private void button1_click(object sender, EventArgs e)
@@ -52,19 +55,23 @@ namespace GraphicsCommandParser
             {
                 if (command[count].StartsWith("rectangle"))
                 {
-                    c1.RectangleCommand(command[count], g, label1, count);
+                    c1.RectangleCommand(command[count], p, g, label1, count);
                 }
                 else if (command[count].StartsWith("circle"))
                 {
-                    c1.CircleCommand(command[count], g, label1, count);
+                    c1.CircleCommand(command[count], p, g, label1, count);
                 }
                 else if (command[count].StartsWith("triangle"))
                 {
-                    c1.TriangleCommand(command[count], g, label1, count);
+                    c1.TriangleCommand(command[count], p, g, label1, count);
+                }
+                else if (command[count].StartsWith("polygon"))
+                {
+                    c1.PolygonCommand(command[count], p, g, label1, count);
                 }
                 else if (command[count].StartsWith("up"))
                 {
-                    c1.UpCommand(command[count], p, g, label1, count);
+                    count = c1.UpCommand(command[count], p, g, label1, count);
                 }
                 else if (command[count].StartsWith("down"))
                 {
@@ -72,11 +79,11 @@ namespace GraphicsCommandParser
                 }
                 else if (command[count].StartsWith("right"))
                 {
-                    c1.RightCommand(command[count], p, g, label1, count);
+                    count = c1.RightCommand(command[count], p, g, label1, count);
                 }
                 else if (command[count].StartsWith("left"))
                 {
-                    c1.LeftCommand(command[count], p, g, label1, count);
+                    count = c1.LeftCommand(command[count], p, g, label1, count);
                 }
                 else if (command[count].StartsWith("movepen"))
                 {
@@ -89,10 +96,6 @@ namespace GraphicsCommandParser
                 else if (command[count].StartsWith("drawtexture"))
                 {
                     c1.DrawTextureCommand(command[count], texPen, g, label1, count);
-                }
-                else if (command[count].StartsWith("drawpolygon"))
-                {
-                    //not implemented
                 }
                 else if (command[count].StartsWith("loop"))
                 {
@@ -151,9 +154,59 @@ namespace GraphicsCommandParser
             label1.Text = null;
             count = 0;
             c1.Clear();
-            //c1.x = c1.y = 0;
+        }
+
+        private void button3_click(object sender, EventArgs e) //Colour Picker
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Color c = colorDialog1.Color;
+                p.Color = c;
+                button3.BackColor = c;
+            }
+        }
+
+        private void HelpCommand_click(object sender, EventArgs e)
+        {
+            CommandHelpForm helpform = new CommandHelpForm();
+            
+            helpform.ShowDialog();
         }
 
         
+
+        private void SaveImage_click(object sender, EventArgs e)
+        {
+            
+            Bitmap bmp = new Bitmap(panel1.Width, panel1.Height);
+            Point p1 = panel1.PointToScreen(Point.Empty);
+            
+            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(p1, bmp.Size);
+            
+            Graphics g = Graphics.FromImage(bmp);
+            g.CopyFromScreen(rect.Left, rect.Top, 0, 0, bmp.Size, CopyPixelOperation.SourceCopy);
+            saveFileDialog2.Filter = ".jpg files|*.jpg| .png files|*.png| All files (*.*)|*.*";
+
+            if (saveFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                bmp.Save(saveFileDialog2.FileName);
+            }
+        }
+
+
+        private void PenWidthSelection_dropdown(object sender, EventArgs e)
+        {
+            p.Width = comboBox1.SelectedIndex;
+        }
+
+        private void PenWidthSelection_text(object sender, EventArgs e)
+        {
+            p.Width = float.Parse(comboBox1.SelectedText);
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

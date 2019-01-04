@@ -31,7 +31,7 @@ namespace GraphicsCommandParser
 
         public override void draw(Graphics g)
         {
-            Pen p = new Pen(Color.Black);
+            Pen p = new Pen(base.c);
             SolidBrush sb = new SolidBrush(c);
             Point[] dims = this.GetPoints();
             //g.FillPolygon(sb, dims);
