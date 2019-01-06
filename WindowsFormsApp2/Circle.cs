@@ -25,9 +25,9 @@ namespace GraphicsCommandParser
             return Math.PI * (rad * rad);
         }
 
-        public override void draw(Graphics g)
+        public override void draw(Graphics g, Pen p) //public override void draw(Graphics g)
         {
-            Pen p = new Pen(base.c);
+            //Pen p = new Pen(base.c);
             SolidBrush sb = new SolidBrush(c);
             //g.FillEllipse(sb, x, y, rad * 2, rad * 2);
             g.DrawEllipse(p, x, y, rad * 2, rad * 2);
@@ -37,6 +37,7 @@ namespace GraphicsCommandParser
         {
             base.set(c, list[0], list[1]);
             this.rad = list[2];
+            
         }
     }
 }

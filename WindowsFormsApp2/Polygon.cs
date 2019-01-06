@@ -24,9 +24,9 @@ namespace GraphicsCommandParser
             throw new NotImplementedException();
         }
 
-        public override void draw(Graphics g)
+        public override void draw(Graphics g, Pen p)
         {
-            Pen p = new Pen(base.c);
+            //Pen p = new Pen(base.c);
             g.DrawPolygon(p, points);
         }
     }

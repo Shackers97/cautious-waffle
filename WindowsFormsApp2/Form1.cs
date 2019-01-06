@@ -15,11 +15,11 @@ namespace GraphicsCommandParser
 {
     public partial class Form1 : Form
     {
-        //public int Cx, Cy;
+        /// <summary>
+        /// The current line position in the List of lines
+        /// </summary>
         public int count = 0;
-        //ShapeFactory sf = new ShapeFactory();
 
-        //List<Variable> localVars = new List<Variable>();
         List<string> command;
 
         Pen p;
@@ -39,6 +39,9 @@ namespace GraphicsCommandParser
             Bitmap bmp = new Bitmap(@"../../images/texture1.jpg");
             TextureBrush tBrush = new TextureBrush(bmp);
             texPen = new Pen(tBrush, 20);
+            Image i = bmp;
+            button4.BackgroundImage = i;
+
             g = panel1.CreateGraphics();
             p = new Pen(Color.Red);
             p.Width = comboBox1.SelectedIndex;
@@ -55,19 +58,19 @@ namespace GraphicsCommandParser
             {
                 if (command[count].StartsWith("rectangle"))
                 {
-                    c1.RectangleCommand(command[count], p, g, label1, count);
+                    count = c1.RectangleCommand(command[count], p, g, label1, count);
                 }
                 else if (command[count].StartsWith("circle"))
                 {
-                    c1.CircleCommand(command[count], p, g, label1, count);
+                    count = c1.CircleCommand(command[count], p, g, label1, count);
                 }
                 else if (command[count].StartsWith("triangle"))
                 {
-                    c1.TriangleCommand(command[count], p, g, label1, count);
+                    count = c1.TriangleCommand(command[count], p, g, label1, count);
                 }
                 else if (command[count].StartsWith("polygon"))
                 {
-                    c1.PolygonCommand(command[count], p, g, label1, count);
+                    count = c1.PolygonCommand(command[count], p, g, label1, count);
                 }
                 else if (command[count].StartsWith("up"))
                 {
@@ -87,19 +90,19 @@ namespace GraphicsCommandParser
                 }
                 else if (command[count].StartsWith("movepen"))
                 {
-                    c1.MovePenCommand(command[count], label1, count);
+                    count = c1.MovePenCommand(command[count], label1, count);
                 }
                 else if (command[count].StartsWith("drawto"))
                 {
-                    c1.DrawToCommand(command[count], p, g, label1, count);
+                    count = c1.DrawToCommand(command[count], p, g, label1, count);
                 }
                 else if (command[count].StartsWith("drawtexture"))
                 {
-                    c1.DrawTextureCommand(command[count], texPen, g, label1, count);
+                    count = c1.DrawTextureCommand(command[count], texPen, g, label1, count);
                 }
                 else if (command[count].StartsWith("loop"))
                 {
-                    c1.LoopCommand(command[count], command, label1, count);
+                    count = c1.LoopCommand(command[count], command, label1, count);
                 }
                 else if (command[count].StartsWith("repeat"))
                 {
@@ -119,7 +122,7 @@ namespace GraphicsCommandParser
                 }
                 else //checks for variables 
                 {
-                    c1.HandleVariable(command[count], label1);
+                    count = c1.HandleVariable(command[count], label1, count);
                 }
             count++;    
             }
@@ -147,13 +150,14 @@ namespace GraphicsCommandParser
             }
         }
 
-        private void button2_click(object sender, EventArgs e)
+        private void button2_click(object sender, EventArgs e) //Clear commands
         {
             textBox1.Clear();
             panel1.Refresh();
             label1.Text = null;
             count = 0;
             c1.Clear();
+            command.Clear();
         }
 
         private void button3_click(object sender, EventArgs e) //Colour Picker
@@ -207,6 +211,20 @@ namespace GraphicsCommandParser
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void texturebutton_click(object sender, EventArgs e)
+        {
+            openFileDialog1.Filter = "Image Files(*.BMP; *.JPG; *.PNG)|*.bmp; *.jpg; *.png| All files (*.*)|*.*";
+            openFileDialog1.InitialDirectory = "../../images/";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Bitmap bmp = new Bitmap(openFileDialog1.FileName);
+                TextureBrush tBrush = new TextureBrush(bmp);
+                texPen = new Pen(tBrush, 20);
+                Image i = bmp;
+                button4.BackgroundImage = i;
+            }
         }
     }
 }

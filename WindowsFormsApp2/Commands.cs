@@ -9,19 +9,28 @@ using System.Windows.Forms;
 
 namespace GraphicsCommandParser
 {
+    /// <summary>
+    /// Set of commands to control the drawing and logic of the form
+    /// </summary>
     public class Commands
     {
         ShapeFactory sf = new ShapeFactory();
         VariableHandler vh = new VariableHandler();
-        public int x, y; //Pen Co-ordinates
         
+        /// <summary>
+        /// Pen Co-ordinates
+        /// </summary>
+        public int x, y;
+
         /// <summary>
         /// Draws a rectangle according to the input string
         /// </summary>
         /// <param name="command">The command string</param>
+        /// <param name="p">The pen used to draw with the command</param>
+        /// <param name="g">The graphics in which the shape will be drawn</param>
         /// <param name="label1">Output label for console</param>
         /// <param name="counter">The current line counter</param>
-        /// <returns>The current line in which the command is run</returns>
+        /// <returns>The current line in which the command is run. Or -2 if the command fails</returns>
         public int RectangleCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
             Regex pattern = new Regex(@"(?<command>\w+)\s(?<width>\d{1,3})\s(?<height>\d{1,3})");
@@ -33,16 +42,26 @@ namespace GraphicsCommandParser
                 int height = int.Parse(match.Groups["height"].Value);
                 Shape s = sf.GetShape("rectangle");
                 s.set(p.Color, x, y, width, height);
-                s.draw(g);
+                s.draw(g, p);
             }
             else
             {
-                label1.Text = "Incorrect syntax for Rectangle at line " + (counter + 1) + ": Stopping execution";
+                label1.Text = "Incorrect syntax for Rectangle: Stopping execution";
                 return -2;
             }
             return counter;
         }
-        public void CircleCommand(string command, Pen p, Graphics g, Label label1, int counter)
+
+        /// <summary>
+        /// Draws a Circle according to the input string
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="p"></param>
+        /// <param name="g"></param>
+        /// <param name="label1"></param>
+        /// <param name="counter"></param>
+        /// <returns>The current line in which the command is run. Or -2 if the command fails</returns>
+        public int CircleCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
             Regex reg = new Regex(@"(?<command>\w+)\s(?<radius>\d{1,3})");
             Match match = reg.Match(command);
@@ -52,15 +71,26 @@ namespace GraphicsCommandParser
                 int rad = int.Parse(match.Groups["radius"].Value);
                 Shape s = sf.GetShape("circle");
                 s.set(p.Color, x, y, rad);
-                s.draw(g);
+                s.draw(g , p);
             }
             else
             {
-                label1.Text = "Incorrect syntax for Circle at line " + (counter + 1) + ": Stopping execution";
-                return;
+                label1.Text = "Incorrect syntax for Circle: Stopping execution";
+                return -2;
             }
+            return counter;
         }
-        public void TriangleCommand(string command, Pen p, Graphics g, Label label1, int counter)
+
+        /// <summary>
+        /// Draws a Triangle according to the input string
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="p"></param>
+        /// <param name="g"></param>
+        /// <param name="label1"></param>
+        /// <param name="counter"></param>
+        /// <returns>The current line in which the command is run. Or -2 if the command fails</returns>
+        public int TriangleCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
             Regex pat = new Regex(@"(?<command>\w+)\s(?<a>\d{1,3})\s(?<b>\d{1,3})");
             Match match = pat.Match(command);
@@ -71,15 +101,26 @@ namespace GraphicsCommandParser
                 int b = int.Parse(match.Groups["b"].Value);
                 Shape s = sf.GetShape("triangle");
                 s.set(p.Color, x, y, a, b);
-                s.draw(g);
+                s.draw(g, p);
             }
             else
             {
-                label1.Text = "Incorrect syntax for Triangle at line " + (counter + 1) + ": Stopping execution";
-                return;
+                label1.Text = "Incorrect syntax for Triangle: Stopping execution";
+                return -2;
             }
+            return counter;
         }
-        public void PolygonCommand(string command, Pen p, Graphics g, Label label1, int counter)
+
+        /// <summary>
+        /// Draws a polygon from a string input.
+        /// </summary>
+        /// <param name="command">The string to parse the command from</param>
+        /// <param name="p"></param>
+        /// <param name="g"></param>
+        /// <param name="label1"></param>
+        /// <param name="counter"></param>
+        /// <returns></returns>
+        public int PolygonCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
             Regex pat = new Regex(@"(?<command>\w+)\s(?<1>\d{1,3}\,\d{1,3})\s(?<2>\d{1,3}\,\d{1,3})\s(?<3>\d{1,3}\,\d{1,3})\s?(?<4>\d{1,3}\,\d{1,3})?\s?(?<5>\d{1,3}\,\d{1,3})?\s?(?<6>\d{1,3}\,\d{1,3})?");
             Match match = pat.Match(command);
@@ -125,8 +166,9 @@ namespace GraphicsCommandParser
             else
             {
                 label1.Text = "Incorrect syntax for Polygon: Stopping execution";
-                return;
+                return -2;
             }
+            return counter;
         }
 
         private Point ToPoint(string coords)
@@ -137,7 +179,9 @@ namespace GraphicsCommandParser
             Point point = new Point(x, y);
             return point;
         }
-
+        /// <summary>
+        /// Draws a line upwards on the Y axis
+        /// </summary>
         public int UpCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
             Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d{1,3})");
@@ -156,6 +200,10 @@ namespace GraphicsCommandParser
             }
             return counter;
         }
+
+        /// <summary>
+        /// Draws a line downwards on the Y axis
+        /// </summary>
         public int DownCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
             Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d{1,3})");
@@ -169,11 +217,15 @@ namespace GraphicsCommandParser
             }
             else
             {
-                label1.Text = "Incorrect syntax for Down at line " + (counter + 1) + ": Stopping execution";
+                label1.Text = "Incorrect syntax for Down: Stopping execution";
                 return -2;
             }
             return counter;
         }
+
+        /// <summary>
+        /// Draws a line left horizontally on the X axis
+        /// </summary>
         public int LeftCommand(string command, Pen p, Graphics g, Label label1, int counter) 
         {
             Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d{1,3})");
@@ -187,11 +239,15 @@ namespace GraphicsCommandParser
             }
             else
             {
-                label1.Text = "Incorrect syntax for Left at line " + (counter + 1) + ": Stopping execution";
+                label1.Text = "Incorrect syntax for Left: Stopping execution";
                 return -2;
             }
             return counter;
         }
+
+        /// <summary>
+        /// Draws a line right horizontally on the X axis
+        /// </summary>
         public int RightCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
             Regex reg = new Regex(@"(?<command>\w+)\s(?<param>\d{1,3})");
@@ -205,12 +261,20 @@ namespace GraphicsCommandParser
             }
             else
             {
-                label1.Text = "Incorrect syntax for Right at line " + (counter + 1) + ": Stopping execution";
+                label1.Text = "Incorrect syntax for Right: Stopping execution";
                 return -2;
             }
             return counter;
         }
-        public void MovePenCommand(string command, Label label1, int counter)
+
+        /// <summary>
+        /// Moves the pen position to new co-ordinates
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="label1"></param>
+        /// <param name="counter"></param>
+        /// <returns></returns>
+        public int MovePenCommand(string command, Label label1, int counter)
         {
             Regex pattern = new Regex(@"(?<command>\w+)\s(?<xcoord>\d{1,3})\s(?<ycoord>\d{1,3})");
             Match match = pattern.Match(command);
@@ -224,12 +288,22 @@ namespace GraphicsCommandParser
             }
             else
             {
-                label1.Text = "Incorrect syntax for movePen at line " + (counter + 1) + ": Stopping execution";
-                return;
+                label1.Text = "Incorrect syntax for movePen: Stopping execution";
+                return -2;
             }
+            return counter;
         }
 
-        public void DrawToCommand(string command, Pen p, Graphics g, Label label1, int counter)
+        /// <summary>
+        /// Draws a straight line to chosen co-ordinates
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="p"></param>
+        /// <param name="g"></param>
+        /// <param name="label1"></param>
+        /// <param name="counter"></param>
+        /// <returns></returns>
+        public int DrawToCommand(string command, Pen p, Graphics g, Label label1, int counter)
         {
             Regex pattern = new Regex(@"(?<command>\w+)\s(?<xcoord>\d+)\s(?<ycoord>\d+)");
             Match match = pattern.Match(command);
@@ -244,11 +318,22 @@ namespace GraphicsCommandParser
             }
             else
             {
-                label1.Text = "Incorrect syntax for DrawTo at line " + (counter + 1) + ": Stopping execution";
-                return;
+                label1.Text = "Incorrect syntax for DrawTo: Stopping execution";
+                return -2;
             }
+            return counter;
         }
-        public void DrawTextureCommand(string command, Pen texPen, Graphics g, Label label1, int counter)     //merge with drawto?
+
+        /// <summary>
+        /// Draws a straight line, using a texture pen, to chosen co-ordinates
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="texPen">The texture pen</param>
+        /// <param name="g"></param>
+        /// <param name="label1"></param>
+        /// <param name="counter"></param>
+        /// <returns></returns>
+        public int DrawTextureCommand(string command, Pen texPen, Graphics g, Label label1, int counter)
         {
             Regex pattern = new Regex(@"(?<command>\w+)\s(?<xcoord>\d+)\s(?<ycoord>\d+)");
             Match match = pattern.Match(command);
@@ -263,11 +348,21 @@ namespace GraphicsCommandParser
             }
             else
             {
-                label1.Text = "Incorrect syntax for DrawTexture at line " + (counter + 1) + ": Stopping execution";
-                return;
+                label1.Text = "Incorrect syntax for DrawTexture: Stopping execution";
+                return -2;
             }
+            return counter;
         }
-        public void LoopCommand(string newcommand, List<string> command, Label label1, int counter)
+
+        /// <summary>
+        /// Loops a selection of commands a specified number of times
+        /// </summary>
+        /// <param name="newcommand">The string containing the loop command</param>
+        /// <param name="command">The list of commands, to count through to calculate the loop</param>
+        /// <param name="label1"></param>
+        /// <param name="counter"></param>
+        /// <returns></returns>
+        public int LoopCommand(string newcommand, List<string> command, Label label1, int counter)
         {
             Regex loopreg = new Regex(@"(?<command>\w+)\s(?<loopnum>\d+)");
             Match match = loopreg.Match(newcommand);
@@ -297,9 +392,14 @@ namespace GraphicsCommandParser
             else
             {
                 label1.Text = "Incorrect syntax for Loop: Stopping execution";
-                return;
+                return -2;
             }
+            return counter;
         }
+
+        /// <summary>
+        /// Repeats a shape drawing
+        /// </summary>
         public int RepeatCommand(string newcommand, List<string> command, Label label1, int counter)
         {
             Regex varPattern = new Regex(@"(?<command>\w+)\s(?<num>\d+)\s(?<shape>\w+)\s(?<var>\w+)\s(?<mod>\+|\-)(?<val>\d+)"); //regex With variable
@@ -365,6 +465,10 @@ namespace GraphicsCommandParser
             }
             return counter;
         }
+
+        /// <summary>
+        /// Command to create a new variable, stored in an instance of variablehandler.
+        /// </summary>
         public int VariableCommand(string command, Label label1, int counter)
         {
             Regex pattern = new Regex(@"(?<name>\w+)\s(?<mod>\=)\s(?<value>\d+)");
@@ -385,11 +489,16 @@ namespace GraphicsCommandParser
             }
             else
             {
-                label1.Text = "Incorrect syntax for variable at line " + (counter + 1) + ": Stopping execution";
+                label1.Text = "Incorrect syntax for variable creation: Stopping execution";
                 return -2;
             }
             return counter;
         }
+
+        /// <summary>
+        /// Checks a variable against a specified value, and executes the following commands if true.
+        /// </summary>
+        /// <returns>The position of the line to jump to if the check does not pass</returns>
         public int IfCommand(string newcommand, List<String> command, Label label1, int counter) //SYNTAX CHECK
         {
             Regex ifReg = new Regex(@"(?<if>\w+)\s(?<variable>\w+)\s(?<mod>\=|\<|\>)\s(?<argval>\d+)");
@@ -422,28 +531,42 @@ namespace GraphicsCommandParser
                             pass = false;
                             break;
                     }
-                    Console.WriteLine("if statement = " + pass);
+                    
                     if (!pass) //if does not pass, skip to endif
                     {
-                        int count2 = counter;
-                        while (!command[count2].StartsWith("endif"))
+                        try // find endif statement
                         {
-                            count2++;
+                            int count2 = counter;
+                            while (!command[count2].StartsWith("endif"))
+                            {
+                                count2++;
+                            }
+                            counter = count2;
                         }
-                        Console.WriteLine("endif statement at line " + (count2 + 1));
-                        counter = count2;
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            label1.Text = "endif statement does not exist";
+                            return -2;
+                        }
                     }
-                }
-                
+                } 
             }
             else
             {
-                label1.Text = "Incorrect syntax for if statement at line " + (counter + 1) + ": Stopping execution";
+                label1.Text = "Incorrect syntax for if statement: Stopping execution";
                 return -2;
             }
             return counter;
-        } 
-        public void HandleVariable(string command, Label label1)
+        }
+
+        /// <summary>
+        /// Checks an input string for an existing variable, and modifies according to the string
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="label1"></param>
+        /// <param name="counter"></param>
+        /// <returns></returns>
+        public int HandleVariable(string command, Label label1, int counter)
         {
             Regex varReg = new Regex(@"(?<name>\w+)\s(?<mod>\+|\-|\=)\s(?<value>\d+)");
             Match newmatch = varReg.Match(command);
@@ -458,8 +581,18 @@ namespace GraphicsCommandParser
                 int index = vh.getVarIndex(varName);
                 label1.Text = vh.localVars[index].ToString();
             }
+            else
+            {
+                label1.Text = "Variable does not exist";
+                return -2;
+            }
+            return counter;
             
         }
+
+        /// <summary>
+        /// Clears the variables list, and resets the position of the pen to 0,0
+        /// </summary>
         public void Clear()
         {
             x = y = 0;

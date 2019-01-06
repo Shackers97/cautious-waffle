@@ -15,18 +15,35 @@ namespace GraphicsCommandParser.Tests
         int counter = 0;
 
         [TestMethod()]
-        public void RectangleCommandTest()
+        public void RectangleCommandTestFail()
         {
             Commands commands = new Commands();
+            
             commands.x = 0;
             commands.y = 0;
             Pen p = new Pen(Color.Black);
             Graphics g = testpanel.CreateGraphics();
 
-            string testcommand = "rectangle 100 100";
+            string testcommand = "rectangle 100 abc"; //incorrect syntax, should fail
 
-            commands.RectangleCommand(testcommand, p, g, testlabel, counter);
-            Assert.IsNotNull(testlabel);
+            int newcounter = commands.RectangleCommand(testcommand, p, g, testlabel, counter);
+            Assert.AreEqual(-2, newcounter);
+        }
+
+        [TestMethod()]
+        public void RectangleCommandTestPass()
+        {
+            Commands commands = new Commands();
+            int newcount = 2; //falsifies the counter to further down the "list"
+            commands.x = 0;
+            commands.y = 0;
+            Pen p = new Pen(Color.Black);
+            Graphics g = testpanel.CreateGraphics();
+
+            string testcommand = "rectangle 100 100"; // command should pass
+
+            newcount = commands.RectangleCommand(testcommand, p, g, testlabel, newcount);
+            Assert.AreEqual(2, newcount);
         }
 
         [TestMethod()]
@@ -74,7 +91,7 @@ namespace GraphicsCommandParser.Tests
             string variable = "var myvariable = 10";
             string variablecom = "myvariable + 5";
             commands.VariableCommand(variable, testlabel, counter);
-            commands.HandleVariable(variablecom, testlabel);
+            commands.HandleVariable(variablecom, testlabel, counter);
 
             string expectedout = "variable myvariable equals: 15";
             Assert.AreEqual(expectedout, testlabel.Text);
@@ -88,7 +105,7 @@ namespace GraphicsCommandParser.Tests
             string varcommand1 = "var myvar = 9";
             string varcommand2 = "myvar + 1";
             commands.VariableCommand(varcommand1, testlabel, counter);
-            commands.HandleVariable(varcommand2, testlabel);
+            commands.HandleVariable(varcommand2, testlabel, counter);
 
             string ifcommand = "if myvar > 10"; //
             string testcommand = "movepen 25 25";
@@ -102,6 +119,7 @@ namespace GraphicsCommandParser.Tests
             counter = commands.IfCommand(ifcommand, comlist, testlabel, counter);
             Assert.AreEqual(2, counter);
         }
+
         [TestMethod()]
         public void RepeatTest()
         {

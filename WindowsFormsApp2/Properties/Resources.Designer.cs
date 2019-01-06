@@ -73,9 +73,29 @@ namespace GraphicsCommandParser.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap X_Axis {
+            get {
+                object obj = ResourceManager.GetObject("X_Axis", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap XAxisDiagram {
             get {
                 object obj = ResourceManager.GetObject("XAxisDiagram", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Y_Axis {
+            get {
+                object obj = ResourceManager.GetObject("Y_Axis", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

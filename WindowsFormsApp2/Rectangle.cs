@@ -25,9 +25,9 @@ namespace GraphicsCommandParser
             return width * height;
         }
 
-        public override void draw(Graphics g)
+        public override void draw(Graphics g, Pen p)  //public override void draw(Graphics g)
         {
-            Pen p = new Pen(base.c);
+            //Pen p = new Pen(base.c);
             SolidBrush sb = new SolidBrush(c);
             //g.FillRectangle(sb, x, y, width, height);
             g.DrawRectangle(p, x, y, width, height);
@@ -38,6 +38,7 @@ namespace GraphicsCommandParser
             base.set(c, list[0], list[1]);
             this.width = list[2];
             this.height = list[3];
+            
         }
     }
 }

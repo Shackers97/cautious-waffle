@@ -15,7 +15,13 @@ namespace GraphicsCommandParser
         {
 
         }
-        public int checkVarValue(string name) //checks and retrieves the value of a variable with string name
+
+        /// <summary>
+        /// Checks and retrieves the value of a variable with string name
+        /// </summary>
+        /// <param name="name">The name of the variable to search for</param>
+        /// <returns>The value of the variable if found</returns>
+        public int checkVarValue(string name) 
         {
             int vcounter = 0;
             int varValue = 0;
@@ -30,8 +36,12 @@ namespace GraphicsCommandParser
             }
             return varValue;
         }
-
-        public int getVarIndex(string name) //checks and retrieves the position of a variable with string name within a variables list
+        /// <summary>
+        /// Checks and retrieves the position of a variable with string name in the variables list
+        /// </summary>
+        /// <param name="name">The name of the variable to search for</param>
+        /// <returns>The int position of the varible in the list</returns>
+        public int getVarIndex(string name)
         {
             int vcounter = 0;
             foreach (Variable var in localVars)
@@ -43,7 +53,12 @@ namespace GraphicsCommandParser
             return vcounter;
         }
 
-        public bool VarExists(string name) //checks if variable of string name exists within a variables list
+        /// <summary>
+        /// Checks if variable of string name exists within a variables list
+        /// </summary>
+        /// <param name="name">The variable to check</param>
+        /// <returns>True if the variable exists within the list</returns>
+        public bool VarExists(string name)
         {
             int vcounter = 0;
             foreach (Variable var in localVars)
@@ -57,6 +72,13 @@ namespace GraphicsCommandParser
             return false;
         }
 
+        /// <summary>
+        /// Modifies a variable; add, subtract, or equals
+        /// </summary>
+        /// <param name="newmatch"></param>
+        /// <param name="varName"></param>
+        /// <param name="currentVal"></param>
+        /// <param name="val"></param>
         public void VariableModify(Match newmatch, string varName, int currentVal, int val)
         {
 

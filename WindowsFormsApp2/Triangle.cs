@@ -29,9 +29,10 @@ namespace GraphicsCommandParser
             throw new NotImplementedException();
         }
 
-        public override void draw(Graphics g)
+        public override void draw(Graphics g, Pen p)//public override void draw(Graphics g)
         {
-            Pen p = new Pen(base.c);
+            //Pen p = new Pen(base.c);
+            
             SolidBrush sb = new SolidBrush(c);
             Point[] dims = this.GetPoints();
             //g.FillPolygon(sb, dims);
@@ -43,6 +44,7 @@ namespace GraphicsCommandParser
             base.set(c, list[0], list[1]);
             this.a = list[2];
             this.b = list[3];
+            
         }
 
         public Point[] GetPoints()
