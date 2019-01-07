@@ -1,5 +1,8 @@
 ﻿namespace GraphicsCommandParser
 {
+    /// <summary>
+    /// The commands help display window
+    /// </summary>
     partial class CommandHelpForm
     {
         /// <summary>
@@ -52,6 +55,7 @@
             this.CausesValidation = false;
             this.ClientSize = new System.Drawing.Size(828, 307);
             this.Controls.Add(this.richTextBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "CommandHelpForm";
             this.Text = "Commands";
             this.ResumeLayout(false);

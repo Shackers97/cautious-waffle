@@ -12,6 +12,9 @@ namespace GraphicsCommandParser
 {
     public partial class CommandHelpForm : Form
     {
+        /// <summary>
+        /// A window displaying the available commands
+        /// </summary>
         public CommandHelpForm()
         {
             InitializeComponent();

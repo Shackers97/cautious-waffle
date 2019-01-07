@@ -359,8 +359,8 @@ namespace GraphicsCommandParser
         /// </summary>
         /// <param name="newcommand">The string containing the loop command</param>
         /// <param name="command">The list of commands, to count through to calculate the loop</param>
-        /// <param name="label1"></param>
-        /// <param name="counter"></param>
+        /// <param name="label1">The output label</param>
+        /// <param name="counter">Line counter</param>
         /// <returns></returns>
         public int LoopCommand(string newcommand, List<string> command, Label label1, int counter)
         {

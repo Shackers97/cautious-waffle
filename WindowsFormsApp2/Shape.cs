@@ -27,14 +27,14 @@ namespace GraphicsCommandParser
         }
 
         public abstract void draw(Graphics g, Pen p); //public abstract void draw(Graphics g);
+
         public abstract double calcArea();
 
         public virtual void set(Color c, params int[] list)
         {
             this.c = c;
             this.x = list[0];
-            this.y = list[1];
-            
+            this.y = list[1];  
         }
     }
 }

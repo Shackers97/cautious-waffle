@@ -31,6 +31,9 @@ namespace GraphicsCommandParser
 
         Commands c1 = new Commands();
 
+        /// <summary>
+        /// The main form window
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
@@ -46,6 +49,8 @@ namespace GraphicsCommandParser
             p = new Pen(Color.Red);
             p.Width = comboBox1.SelectedIndex;
             button3.BackColor = Color.Red;
+            Set_Tooltips();
+            
         }
 
         private void button1_click(object sender, EventArgs e)
@@ -128,7 +133,7 @@ namespace GraphicsCommandParser
             }
         }
 
-        private void export_click(object sender, EventArgs e)
+        private void export_click(object sender, EventArgs e) //Save commands to text file
         {
             saveFileDialog1.Filter = ".txt files|*.txt|All files (*.*)|*.*";
 
@@ -140,7 +145,7 @@ namespace GraphicsCommandParser
             }
         }
 
-        private void load_click(object sender, EventArgs e)
+        private void load_click(object sender, EventArgs e) //Load text file
         {
             openFileDialog1.Filter = ".txt files|*.txt|All files (*.*)|*.*";
 
@@ -170,7 +175,7 @@ namespace GraphicsCommandParser
             }
         }
 
-        private void HelpCommand_click(object sender, EventArgs e)
+        private void HelpCommand_click(object sender, EventArgs e) //Help window
         {
             CommandHelpForm helpform = new CommandHelpForm();
             
@@ -179,7 +184,7 @@ namespace GraphicsCommandParser
 
         
 
-        private void SaveImage_click(object sender, EventArgs e)
+        private void SaveImage_click(object sender, EventArgs e) //Saves an image of the drawing
         {
             
             Bitmap bmp = new Bitmap(panel1.Width, panel1.Height);
@@ -225,6 +230,26 @@ namespace GraphicsCommandParser
                 Image i = bmp;
                 button4.BackgroundImage = i;
             }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Color c = colorDialog1.Color;
+                panel1.BackColor = c;
+                button5.BackColor = c;
+            }
+        }
+
+        private void Set_Tooltips()
+        {
+            toolTip1.SetToolTip(button1, "Run commands");
+            toolTip1.SetToolTip(button2, "Clear commands and drawings");
+            toolTip1.SetToolTip(button3, "Set the pen colour");
+            toolTip1.SetToolTip(button4, "Select the texture pen's texture");
+            toolTip1.SetToolTip(button5, "Set the background colour");
+            toolTip1.SetToolTip(comboBox1, "Set the pen size");
         }
     }
 }

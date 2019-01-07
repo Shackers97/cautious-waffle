@@ -10,7 +10,7 @@ namespace GraphicsCommandParser
     interface Shapes
     {
         void set(Color c, params int[] list);
-        void draw(Graphics g, Pen p); //void draw(Graphics g);
+        void draw(Graphics g, Pen p);
         double calcArea();
     }
 }

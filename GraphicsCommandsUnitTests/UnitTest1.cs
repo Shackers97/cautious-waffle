@@ -14,6 +14,9 @@ namespace GraphicsCommandParser.Tests
         Label testlabel = new Label();
         int counter = 0;
 
+        /// <summary>
+        /// Tests the rectangle command with an incorrect input, should return and not draw.
+        /// </summary>
         [TestMethod()]
         public void RectangleCommandTestFail()
         {
@@ -30,6 +33,9 @@ namespace GraphicsCommandParser.Tests
             Assert.AreEqual(-2, newcounter);
         }
 
+        /// <summary>
+        /// Draws a rectangle, if succeeded then the counter should return the same as input
+        /// </summary>
         [TestMethod()]
         public void RectangleCommandTestPass()
         {
@@ -46,6 +52,9 @@ namespace GraphicsCommandParser.Tests
             Assert.AreEqual(2, newcount);
         }
 
+        /// <summary>
+        /// Tests the current pen position, by drawing to coordinates first
+        /// </summary>
         [TestMethod()]
         public void PenPositionTest()
         {
@@ -62,6 +71,9 @@ namespace GraphicsCommandParser.Tests
             Assert.AreEqual(commands.y, 250);
         }
 
+        /// <summary>
+        /// Creates a list of commands, and attempts to duplicate them 5 times
+        /// </summary>
         [TestMethod()]
         public void LoopTest()
         {
@@ -80,9 +92,12 @@ namespace GraphicsCommandParser.Tests
             testcommands.Add(t3);
             testcommands.Add(t4);
             commands.LoopCommand(t1, testcommands, testlabel, counter);
-            Assert.AreEqual(12, testcommands.Count); //Number of final commands, tests that the loop command copies the correct commands the correct number of times
+            Assert.AreEqual(12, testcommands.Count); //Number of final commands in the list, the two copied (5x2) plus the (2) loop commands (= 12)
         }
 
+        /// <summary>
+        /// Creates a variable and adds to it, should return the new value.
+        /// </summary>
         [TestMethod()]
         public void VariableTest()
         {
@@ -97,6 +112,26 @@ namespace GraphicsCommandParser.Tests
             Assert.AreEqual(expectedout, testlabel.Text);
         }
 
+        /// <summary>
+        /// Creates a new variable but adds to a nonexistant one, should return non-existant.
+        /// </summary>
+        [TestMethod()]
+        public void VariableTestFail ()
+        {
+            Commands commands = new Commands();
+
+            string variable = "var myvariable = 10";
+            string variablecom = "testvariable + 5";
+            commands.VariableCommand(variable, testlabel, counter);
+            commands.HandleVariable(variablecom, testlabel, counter);
+
+            string expectedout = "Variable does not exist";
+            Assert.AreEqual(expectedout, testlabel.Text);
+        }
+
+        /// <summary>
+        /// Running a simple if comparator. Should return the position of endif
+        /// </summary>
         [TestMethod()]
         public void IfTest()
         {
@@ -107,8 +142,8 @@ namespace GraphicsCommandParser.Tests
             commands.VariableCommand(varcommand1, testlabel, counter);
             commands.HandleVariable(varcommand2, testlabel, counter);
 
-            string ifcommand = "if myvar > 10"; //
-            string testcommand = "movepen 25 25";
+            string ifcommand = "if myvar > 11";
+            string testcommand = "movepen 25 25"; //Should not pass this command regardless, however not called in the test
             string endif = "endif";
 
             List<string> comlist = new List<string>();
@@ -120,6 +155,9 @@ namespace GraphicsCommandParser.Tests
             Assert.AreEqual(2, counter);
         }
 
+        /// <summary>
+        /// Testing the repeat command, should copy the command and increment it as defined
+        /// </summary>
         [TestMethod()]
         public void RepeatTest()
         {
@@ -130,9 +168,9 @@ namespace GraphicsCommandParser.Tests
             string assertcommand = "circle 30";
             commands.RepeatCommand(com, commandslist, testlabel, counter);
 
-            Assert.AreEqual(5, commandslist.Count); //should add 4 commands to the list
+            Assert.AreEqual(5, commandslist.Count); //should add 4 new commands to the list
 
-            Assert.AreEqual(assertcommand, commandslist[2]); //checks if the third command in the list is the correct command
+            Assert.AreEqual(assertcommand, commandslist[2]); //checks if the third position in the list is the expected command
         }
     }
 }

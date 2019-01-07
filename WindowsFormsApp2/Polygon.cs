@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace GraphicsCommandParser
 {
+    //not implemented
     class Polygon : Shape
     {
         Point[] points;
